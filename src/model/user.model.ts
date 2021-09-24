@@ -16,18 +16,20 @@ interface UserDocument extends Document {
   disable: boolean
 }
 
+const deliveryAddressSchema = new Schema({
+  address: { type: String, required: true },
+  ward: { type: String, required: true },
+  district: { type: String, required: true },
+  city: { type: String, required: true },
+})
+
 const userSchema = new Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   username: { type: String, required: true },
   avatar: { type: String, required: true, default: config.defaultAvatar },
   phone: { type: String },
-  deliveryAddress: {
-    address: { type: String },
-    ward: { type: String },
-    district: { type: String },
-    city: { type: String },
-  },
+  deliveryAddress: { type: deliveryAddressSchema },
   disable: { type: Boolean, required: true, default: false },
 })
 
