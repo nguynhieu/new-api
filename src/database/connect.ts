@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
+import config from '../config'
 
 const connect = () => {
   mongoose
-    .connect(process.env.MONGODB_URI || '')
+    .connect(config.dbUri)
     .then(() => {
       console.log("I am able to connect Oneforall's Database, yeahhhhh")
     })
