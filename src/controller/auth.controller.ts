@@ -29,10 +29,11 @@ export const login = async (req: Request, res: Response) => {
   }
 
   // generate access token
-  const payload = { email }
+  const payload = { _id: user._id }
   const token = jwt.sign(payload, config.jwtPrivateKey, {
     expiresIn: config.refreshTokenTtl,
   })
+
   // respond OK status with access token
   return res.status(httpStatus.OK).json({ token })
 }
@@ -58,17 +59,18 @@ export const register = async (req: Request, res: Response) => {
 
   try {
     // insert new user document to database
-    await newUser.save()
+    const savedUser = await newUser.save()
+
+    // generate access token
+    const payload = { _id: savedUser._id }
+    const token = jwt.sign(payload, config.jwtPrivateKey, {
+      expiresIn: config.refreshTokenTtl,
+    })
+
+    // respond CREATE status with access token
+    return res.status(httpStatus.CREATED).json({ token })
   } catch (err) {
     // if user value is not valid then respond status BAD REQUEST with err
     return res.status(httpStatus.BAD_REQUEST).send(err)
   }
-
-  // generate access token
-  const payload = { email }
-  const token = jwt.sign(payload, config.jwtPrivateKey, {
-    expiresIn: config.refreshTokenTtl,
-  })
-  // respond CREATE status with access token
-  return res.status(httpStatus.CREATED).json({ token })
 }
