@@ -17,3 +17,11 @@ export const getUsers = async (req: Request, res: Response) => {
 
   return res.status(httpStatus.OK).send(users)
 }
+
+export const searchUser = async (req: Request, res: Response) => {
+  res.sendStatus(httpStatus.OK)
+}
+
+export const blockUser = async (req: Request, res: Response) => {
+  res.sendStatus(httpStatus.OK)
+}
