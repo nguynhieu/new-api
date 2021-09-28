@@ -48,5 +48,17 @@ export const searchUser = async (req: Request, res: Response) => {
 }
 
 export const blockUser = async (req: Request, res: Response) => {
-  res.sendStatus(httpStatus.OK)
+  const { userId } = req.params
+
+  try {
+    const queryUser = await UserModel.findById(userId)
+    if (queryUser) {
+      queryUser.disable = !queryUser.disable
+      await queryUser.save()
+    }
+
+    return res.send(queryUser)
+  } catch (error) {
+    return res.status(httpStatus.BAD_REQUEST).send(error)
+  }
 }
