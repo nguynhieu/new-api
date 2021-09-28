@@ -1,7 +1,7 @@
 import { Document, model, Schema } from 'mongoose'
 import config from '../config'
 
-interface UserDocument extends Document {
+export interface UserDocument extends Document {
   email: string
   password: string
   username: string
