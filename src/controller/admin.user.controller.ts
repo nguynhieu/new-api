@@ -1,26 +1,15 @@
 import { Request, Response } from 'express'
 import httpStatus from '../constant/status.constant'
 import UserModel from '../model/user.model'
-import { UserDocument } from '../model/user.model'
-
-const generateNonPasswordUsers = (users: UserDocument[]) => {
-  return users.map((user) => {
-    const newUser = JSON.parse(JSON.stringify(user))
-    delete newUser.password
-    return newUser
-  })
-}
 
 export const getUsers = async (req: Request, res: Response) => {
-  const queryUsers = await UserModel.find({})
+  const queryUsers = await UserModel.find({}, { password: 0 })
 
   if (!queryUsers) {
     return res.sendStatus(httpStatus.NO_CONTENT)
   }
 
-  const users = generateNonPasswordUsers(queryUsers)
-
-  return res.status(httpStatus.OK).send(users)
+  return res.status(httpStatus.OK).send(queryUsers)
 }
 
 export const searchUser = async (req: Request, res: Response) => {
@@ -31,17 +20,18 @@ export const searchUser = async (req: Request, res: Response) => {
   }
 
   try {
-    const queryUsers = await UserModel.find({
-      $or: [
-        { email: new RegExp(q as string) },
-        { phone: new RegExp(q as string) },
-        { username: new RegExp(q as string) },
-      ],
-    })
+    const queryUsers = await UserModel.find(
+      {
+        $or: [
+          { email: new RegExp(q as string) },
+          { phone: new RegExp(q as string) },
+          { username: new RegExp(q as string) },
+        ],
+      },
+      { password: 0 }
+    )
 
-    const users = generateNonPasswordUsers(queryUsers)
-
-    return res.status(httpStatus.OK).send(users)
+    return res.status(httpStatus.OK).send(queryUsers)
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error)
   }
