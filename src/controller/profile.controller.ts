@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import httpStatus from '../constant/status.constant'
 import UserModel from '../model/user.model'
 import { uploadAvatar } from '../service/firebase'
+import bcrypt from 'bcryptjs'
+import config from '../config'
 
 export const getProfile = async (req: Request, res: Response) => {
   const { _id } = req.payloadToken
@@ -32,7 +34,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     // If there's a new avatar, upload new avatar to Firebase and get avatar url instead of base64 string
     let updatedUser
     if (cloneUser.avatar !== requestBody.avatar) {
-      const avatarName = requestBody.username
+      const avatarName = _id
       const avatarUrl = await uploadAvatar(avatarName, requestBody.avatar)
 
       updatedUser = { ...cloneUser, ...requestBody, avatar: avatarUrl }
@@ -47,4 +49,33 @@ export const updateProfile = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error)
   }
+}
+
+export const changePassword = async (req: Request, res: Response) => {
+  const {
+    payloadToken: { _id },
+    body: { oldPassword, newPassword },
+  } = req
+
+  const queryUser = await UserModel.findOne({ _id })
+  if (!queryUser) {
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
+  }
+
+  const result = await bcrypt.compare(oldPassword, queryUser.password)
+  if (!result) {
+    return res.status(httpStatus.BAD_REQUEST).send('Old password is incorrect')
+  }
+
+  const salt = await bcrypt.genSalt(config.saltWorkFactor)
+  const hashedPassword = await bcrypt.hash(newPassword, salt)
+  queryUser.password = hashedPassword
+
+  try {
+    await queryUser.save()
+  } catch (error) {
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
+  }
+
+  return res.sendStatus(httpStatus.OK)
 }
