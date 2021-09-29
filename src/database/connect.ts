@@ -5,10 +5,10 @@ const connect = () => {
   mongoose
     .connect(config.dbUri)
     .then(() => {
-      console.log("I am able to connect Oneforall's Database, yeahhhhh")
+      console.log('Dbs connected')
     })
     .catch((error) => {
-      console.log('Opps I came across something :<')
+      console.log('Opps I came across something')
       console.log(error)
     })
 }

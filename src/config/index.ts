@@ -4,7 +4,7 @@ dotenv.config()
 
 const config = {
   // server
-  port: process.env.PORT || 6969,
+  port: process.env.PORT || 3000,
 
   // database
   dbUri: process.env.MONGODB_URI || '',
