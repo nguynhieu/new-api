@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
+
 import httpStatus from '../constant/status.constant'
 import TourModel from '../model/tour.model'
+import cloudinary from '../config/cloudinary'
 
 export const getTours = async (req: Request, res: Response) => {
   const { page = 1, limit = 10, name, email, phone } = req.query
@@ -64,6 +66,21 @@ export const deleteTour = async (req: Request, res: Response) => {
   try {
     await TourModel.remove({ _id: tourId })
     return res.status(httpStatus.OK).send('Deleted successfuly')
+  } catch (error) {
+    return res.status(httpStatus.BAD_REQUEST).send(error)
+  }
+}
+
+export const upload = async (req: Request, res: Response) => {
+  const photo = req.file
+
+  try {
+    if (photo) {
+      const { url } = await cloudinary.uploader.upload(photo?.path)
+      return res.status(httpStatus.OK).send({
+        url,
+      })
+    }
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error)
   }
