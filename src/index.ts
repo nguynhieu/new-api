@@ -1,10 +1,12 @@
 import express, { Application } from 'express'
+import cors from 'cors'
+
 import config from './config'
 import connect from './database/connect'
 import routes from './routes'
 
 const app: Application = express()
-
+app.use(cors())
 // for parsing application/json and parsing application/x-www-form-urlencoded
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
