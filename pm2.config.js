@@ -28,7 +28,7 @@ module.exports = {
       script: 'yarn start',
       watch: '.',
       name: 'api',
-      env_dev: {
+      env_prod: {
         PORT: 3000,
         NODE_ENV: 'development'
       },
@@ -38,7 +38,7 @@ module.exports = {
       script: 'yarn start',
       watch: '.',
       name: 'api2',
-      env_dev: {
+      env_prod: {
         PORT: 5000,
         NODE_ENV: 'production'
       },
