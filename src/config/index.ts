@@ -4,7 +4,10 @@ dotenv.config()
 
 const config = {
   // server
-  port: process.env.PORT || 3000,
+  port: process.env.PORT,
+
+  // node env
+  NOTE_ENV: process.env.NODE_ENV,
 
   // database
   dbUri: process.env.MONGODB_URI || '',

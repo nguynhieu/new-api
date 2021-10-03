@@ -5,6 +5,6 @@ export const testMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log('test middleware: Wow something has penetrated me 0_0!')
+  console.log('test middlewar!')
   return next()
 }
