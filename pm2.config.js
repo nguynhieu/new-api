@@ -1,5 +1,6 @@
 module.exports = {
   apps: [
+    // development
     {
       script: 'yarn dev',
       watch: '.',
@@ -12,6 +13,29 @@ module.exports = {
     },
     {
       script: 'yarn dev',
+      watch: '.',
+      name: 'api2',
+      env_dev: {
+        PORT: 5000,
+        NODE_ENV: 'production'
+      },
+      ignore_watch: ['pm2.config.js']
+    },
+
+
+    // production
+    {
+      script: 'yarn start',
+      watch: '.',
+      name: 'api',
+      env_dev: {
+        PORT: 3000,
+        NODE_ENV: 'development'
+      },
+      ignore_watch: ['pm2.config.js']
+    },
+    {
+      script: 'yarn start',
       watch: '.',
       name: 'api2',
       env_dev: {
