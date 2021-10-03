@@ -1,4 +1,4 @@
-import express, { Application, Response } from 'express'
+import express, { Application } from 'express'
 import cors from 'cors'
 
 import config from './config'
@@ -7,15 +7,6 @@ import routes from './routes'
 
 const app: Application = express()
 app.use(cors())
-app.use('/', (_, res: Response) => {
-  let msg
-  if (config.NOTE_ENV === 'production') {
-    msg = 'API prod connected'
-  } else {
-    msg = 'API dev connected'
-  }
-  res.status(200).send(msg)
-})
 // for parsing application/json and parsing application/x-www-form-urlencoded
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
