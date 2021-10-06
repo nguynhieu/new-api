@@ -16,5 +16,6 @@ app.use(express.static('public'))
 app.listen(config.port, () => {
   console.log(`Oneforall has been ready to hear you on port ${config.port}`)
   connect()
+
   routes(app)
 })

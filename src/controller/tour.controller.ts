@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
+import _ from 'lodash'
 
 import httpStatus from '../constant/status.constant'
 import TourModel from '../model/tour.model'
+import BookingModel, { bookingStatus } from '../model/booking.model'
 import cloudinary from '../config/cloudinary'
 
 export const getTours = async (req: Request, res: Response) => {
@@ -32,6 +34,17 @@ export const getTours = async (req: Request, res: Response) => {
       .limit(Number(limit))
 
     return res.status(httpStatus.OK).send(tours)
+  } catch (error) {
+    return res.status(httpStatus.BAD_REQUEST).send(error)
+  }
+}
+
+export const getTourDetail = async (req: Request, res: Response) => {
+  const { tourId } = req.params
+
+  try {
+    const tour = await TourModel.findById(tourId)
+    return res.status(httpStatus.OK).send(tour)
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error)
   }
@@ -83,5 +96,29 @@ export const upload = async (req: Request, res: Response) => {
     }
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error)
+  }
+}
+
+export const bookTour = async (req: Request, res: Response) => {
+  const { tourId } = req.params
+  const { dateFrom, dateTo, phone, email } = req.body
+
+  try {
+    const tour = await TourModel.findById(tourId)
+    await BookingModel.insertMany([
+      {
+        tour,
+        dateFrom,
+        dateTo,
+        status: bookingStatus[bookingStatus.PENDING],
+        createdAt: new Date(),
+        phone,
+        email,
+      },
+    ])
+    return res.status(httpStatus.OK).send('Created successfuly')
+  } catch (error: any) {
+    const errs = _.map(error.errors, (item) => item.message)
+    return res.status(httpStatus.BAD_REQUEST).send(errs[0])
   }
 }
