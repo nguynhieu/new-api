@@ -33,7 +33,16 @@ export const getTours = async (req: Request, res: Response) => {
       .skip(skip)
       .limit(Number(limit))
 
-    return res.status(httpStatus.OK).send(tours)
+    const totalTour = await TourModel.count()
+    const pages = Math.ceil(totalTour / Number(limit))
+
+    return res.status(httpStatus.OK).send({
+      data: tours,
+      total: totalTour,
+      page,
+      limit,
+      pages,
+    })
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error)
   }
@@ -54,8 +63,8 @@ export const addTours = async (req: Request, res: Response) => {
   const data = req.body
 
   try {
-    await TourModel.insertMany([data])
-    return res.status(httpStatus.OK).send('Created successfuly')
+    await TourModel.insertMany([{ ...data, createdAt: new Date(), star: 10 }])
+    return res.status(httpStatus.OK).send({ message: 'Created successfuly' })
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error)
   }
@@ -63,11 +72,14 @@ export const addTours = async (req: Request, res: Response) => {
 
 export const updateTour = async (req: Request, res: Response) => {
   const { tourId } = req.params
-  const data = req.body
+  const { name, address, description, email, image, phone, price } = req.body
 
   try {
-    await TourModel.updateOne({ _id: tourId }, data)
-    return res.status(httpStatus.OK).send('Updated successfuly')
+    await TourModel.updateOne(
+      { _id: tourId },
+      { name, address, description, email, image, phone, price }
+    )
+    return res.status(httpStatus.OK).send({ message: 'Updated successfuly' })
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error)
   }
@@ -77,8 +89,8 @@ export const deleteTour = async (req: Request, res: Response) => {
   const { tourId } = req.params
 
   try {
-    await TourModel.remove({ _id: tourId })
-    return res.status(httpStatus.OK).send('Deleted successfuly')
+    await TourModel.deleteOne({ _id: tourId })
+    return res.status(httpStatus.OK).send({ message: 'Deleted successfuly' })
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error)
   }
@@ -116,7 +128,7 @@ export const bookTour = async (req: Request, res: Response) => {
         email,
       },
     ])
-    return res.status(httpStatus.OK).send('Created successfuly')
+    return res.status(httpStatus.OK).send({ message: 'Created successfuly' })
   } catch (error: any) {
     const errs = _.map(error.errors, (item) => item.message)
     return res.status(httpStatus.BAD_REQUEST).send(errs[0])
