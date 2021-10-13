@@ -7,29 +7,32 @@ import BookingModel, { bookingStatus } from '../model/booking.model'
 import cloudinary from '../config/cloudinary'
 
 export const getTours = async (req: Request, res: Response) => {
-  const { page = 1, limit = 10, name, email, phone } = req.query
+  const {
+    page = 1,
+    limit = 10,
+    name = '',
+    phone = '',
+    price,
+    createdAt = '',
+    address = '',
+    sort = '',
+  } = req.query
+
   const skip = (Number(page) - 1) * Number(limit)
+  const dateQuery = createdAt ? new Date(createdAt as string) : new Date()
+  dateQuery.setDate(dateQuery.getDate() + 1)
 
   try {
-    // const tours = await TourModel.insertMany([
-    //   {
-    //     name: 'Hạ Du ngoạn Vịnh Hạ Long từ không trung',
-    //     image:
-    //       'https://media.travel.com.vn/destination/dg_200827_HA%20LONG_322052888.jpg',
-    //     price: 9999999,
-    //     star: 8,
-    //     startDate: new Date(),
-    //     description:
-    //       'Tới Abu Dhabi, quý khách sẽ được du lịch trên sa mạc và trải nghiệm chương trình Desert safari mạo hiểm ngồi trên Land Cruiser với tốc độ chóng mặt và băng qua những triền cát dốc cao, cua gấp nhiều lần. Sau đó thưởng thức bữa tiệc đồ nướng tại những túp lều dựng bằng lá cọ khô trải trên thảm thô. Tại đây, Quý khách có thể tham gia cưỡi lạc đà, nghe điệu nhạc Ả rập nhẹ nhàng và xem chương trình múa.',
-    //     address: 'Hồ Chí Minh',
-    //     remainSlot: 10,
-    //     createdAt: new Date(),
-    //     phone: '01230123123',
-    //     email: 'travel-com@gmail.com',
-    //   },
-    // ])
-    const tours = await TourModel.find()
-      .sort({ _id: -1 })
+    const tours = await TourModel.find({
+      name: new RegExp(name as string, 'i'),
+      phone: new RegExp(phone as string, 'i'),
+      address: new RegExp(address as string, 'i'),
+      createdAt: {
+        $lte: dateQuery,
+      },
+      ...(price ? { price: { $lte: Number(price) } } : {}),
+    })
+      .sort({ _id: sort === 'desc' ? -1 : 1 })
       .skip(skip)
       .limit(Number(limit))
 

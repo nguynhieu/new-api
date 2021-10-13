@@ -1,5 +1,4 @@
 import { Document, model, Schema } from 'mongoose'
-
 export interface TourDocument extends Document {
   name: string
   image: string
