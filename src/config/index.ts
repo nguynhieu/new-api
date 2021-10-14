@@ -4,7 +4,7 @@ dotenv.config()
 
 const config = {
   // server
-  port: process.env.PORT,
+  port: process.env.PORT || 3000,
 
   // node env
   NOTE_ENV: process.env.NODE_ENV,
