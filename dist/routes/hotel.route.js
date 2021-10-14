@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const hotel_controller_1 = require("../controller/hotel.controller");
+const authorization_middleware_1 = require("../middleware/authorization.middleware");
+const router = (0, express_1.Router)();
+router.get('/', hotel_controller_1.getHotelList);
+router.post('/', authorization_middleware_1.checkAuthorized, hotel_controller_1.addHotel);
+router.put('/:hotelId/update', authorization_middleware_1.checkAuthorized, hotel_controller_1.updateHotel);
+router.delete('/:hotelId/delete', authorization_middleware_1.checkAuthorized, hotel_controller_1.deleteHotel);
+exports.default = router;
