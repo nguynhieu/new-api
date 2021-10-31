@@ -16,7 +16,7 @@ export const sendContact = async (req: Request, res: Response) => {
   const contact = req.body
 
   try {
-    await ContactModel.insertMany(contact)
+    await ContactModel.insertMany({ ...contact, createdAt: new Date() })
 
     return res
       .status(httpStatus.OK)

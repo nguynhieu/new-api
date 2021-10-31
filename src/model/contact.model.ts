@@ -14,6 +14,7 @@ const contactSchema = new Schema({
   phone: { type: String, required: true },
   title: { type: String, required: true },
   content: { type: String, required: true },
+  createdAt: { type: Date, required: true },
 })
 
 export default model<ContactDocument>('Contact', contactSchema)
