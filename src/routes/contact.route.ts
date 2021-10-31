@@ -1,8 +1,10 @@
 import { Router } from 'express'
 
-import { sendContact } from '../controller/contact.controller'
+import { sendContact, getContacts } from '../controller/contact.controller'
 
 const router = Router()
+
+router.get('/', getContacts)
 
 router.post('/', sendContact)
 

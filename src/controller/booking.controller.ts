@@ -5,7 +5,7 @@ import httpStatus from '../constant/status.constant'
 import BookingModel from '../model/booking.model'
 
 export const getBookingHistory = async (req: Request, res: Response) => {
-  const { limit = 10, page = 1 } = req.query
+  const { limit = 200, page = 1 } = req.query
   const skip = (Number(page) - 1) * Number(limit)
 
   try {
