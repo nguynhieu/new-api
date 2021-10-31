@@ -4,7 +4,7 @@ import ContactModel from '../model/contact.model'
 
 export const getContacts = async (req: Request, res: Response) => {
   try {
-    const contacts = await ContactModel.find()
+    const contacts = await ContactModel.find().sort({ _id: -1 })
 
     return res.status(httpStatus.OK).send(contacts)
   } catch (err) {
