@@ -22,6 +22,6 @@ export const sendContact = async (req: Request, res: Response) => {
       .status(httpStatus.OK)
       .json({ message: 'Send contact successfuly' })
   } catch (err) {
-    return res.sendStatus(httpStatus.BAD_REQUEST)
+    return res.sendStatus(httpStatus.BAD_REQUEST).send(err)
   }
 }
