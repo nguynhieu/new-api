@@ -11,12 +11,14 @@ export interface TourDocument extends Document {
   createdAt: Date
   phone: string
   email: string
+  discount: number
 }
 
 const tourSchema = new Schema({
   name: { type: String, required: true },
   image: { type: String, required: true },
   price: { type: String, required: true },
+  discount: { type: Number },
   star: { type: String, required: true },
   startDate: { type: Date },
   description: { type: String, required: true },

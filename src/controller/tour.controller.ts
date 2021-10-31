@@ -16,6 +16,7 @@ export const getTours = async (req: Request, res: Response) => {
     createdAt = '',
     address = '',
     sort = '',
+    discount = false,
   } = req.query
 
   const skip = (Number(page) - 1) * Number(limit)
@@ -30,6 +31,7 @@ export const getTours = async (req: Request, res: Response) => {
       createdAt: {
         $lte: dateQuery,
       },
+      ...(discount === 'true' ? { discount: { $gt: 0 } } : {}),
       ...(price ? { price: { $lte: Number(price) } } : {}),
     })
       .sort({ _id: sort === 'desc' ? -1 : 1 })

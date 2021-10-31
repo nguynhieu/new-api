@@ -19,4 +19,4 @@ const contactSchema = new Schema({
   content: { type: String, required: true },
 })
 
-export default model<ContactDocument>('Hotel', contactSchema)
+export default model<ContactDocument>('Contact', contactSchema)
