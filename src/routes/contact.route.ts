@@ -1,9 +1,9 @@
 import { Router } from 'express'
 
-import { bookTour } from '../controller/tour.controller'
+import { sendContact } from '../controller/contact.controller'
 
 const router = Router()
 
-router.post('/:tourId/book', bookTour)
+router.post('/', sendContact)
 
 export default router
