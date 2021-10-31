@@ -77,12 +77,13 @@ export const addTours = async (req: Request, res: Response) => {
 
 export const updateTour = async (req: Request, res: Response) => {
   const { tourId } = req.params
-  const { name, address, description, email, image, phone, price } = req.body
+  const { name, address, description, email, image, phone, price, discount } =
+    req.body
 
   try {
     await TourModel.updateOne(
       { _id: tourId },
-      { name, address, description, email, image, phone, price }
+      { name, address, description, email, image, phone, price, discount }
     )
     return res.status(httpStatus.OK).send({ message: 'Updated successfuly' })
   } catch (error) {
